@@ -18,20 +18,22 @@
       <reporter class="ResponseTimeStatsReporter">
          <property name="minimumEnabled" value="false"/>
          <property name="maximumEnabled" value="false"/>
+         <property name="windowType" value="iteration"/>
+         <property name="windowSize" value="${report.period:100}"/>
          <destination class="ChartDestination">
-            <period type="percentage" value="1"/>
+            <period type="iteration" value="${report.period:100}"/>
             <property name="name" value="READ Response Time"/>
             <property name="group" value="read_rt"/>
             <property name="yAxis" value="Response Time [ms]"/>
             <property name="attributes" value="Result,Average"/>
          </destination>
          <destination class="ConsoleDestination">
-            <period type="percentage" value="1"/>
+            <period type="iteration" value="${report.period:100}"/>
          </destination>
       </reporter>
       <reporter class="IterationsPerSecondReporter">
          <destination class="CsvDestination">
-            <period type="percentage" value="1"/>
+            <period type="iteration" value="${report.period:100}"/>
             <property name="path" value="${perfcake.scenario}-average-throughput.csv"/>
          </destination>
          <destination class="PerfRepoDestination" enabled="${perfrepo.enabled:false}">

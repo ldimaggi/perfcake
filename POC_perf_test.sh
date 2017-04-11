@@ -9,7 +9,8 @@ export SERVER_HOST=localhost
 export SERVER_PORT=1234
 export DURATION=43200
 export ADDITIONAL_PERFREPO_TAGS=soak;12h;centos-ci
-export PERFREPO_ENABLED=true
+export ZABBIX_HOST_PREFIX=$NODE_NAME
+export PERFREPO_ENABLED=false
 
 # Setup required packages
 yum -y install java-1.8.0-oracle-devel java-1.8.0-oracle

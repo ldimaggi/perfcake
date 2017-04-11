@@ -62,6 +62,21 @@ cp devtools-core-crud-read.xml $PERFCAKE_HOME/resources/scenarios/;
 cp devtools-core-crud-update.xml $PERFCAKE_HOME/resources/scenarios/;
 cp devtools-core-crud-delete.xml $PERFCAKE_HOME/resources/scenarios/;
 
+# Verify the Core version
+if [[ "x$CORE_SERVER_COMMIT" != "x" ]];
+then
+	echo "Verifying the Core server version..."
+	current_server_status=`curl -silent http://$SERVER_HOST:$SERVER_PORT/api/status | grep commit | sed -e 's,":",=,g' | sed -e 's,[{"}],,g' | sed -e 's,\,,;,g'`
+	echo $current_server_status
+	current_server_commit=`echo $current_server_status | sed -e 's,.*commit=\([^;]*\);.*,\1,g'`
+	echo "The Core version is $current_server_commit"
+	if [[ $CORE_SERVER_COMMIT != $current_server_commit ]];
+	then
+		echo "ERROR: THE CORE VERSION ($current_server_commit) HAS CHANGED FROM EXPECTED ($CORE_SERVER_COMMIT).";
+		exit 1;
+	fi;
+fi
+
 # Get the work items space ID
 spaces_resp=`curl -silent -X GET --header 'Accept: application/json' 'http://'$SERVER_HOST':'$SERVER_PORT'/api/spaces'`
 export WORK_ITEMS_SPACE=`echo $spaces_resp | grep self | sed -e 's,.*"self":"[^"]*/api/spaces/\([^"]*\)".*,\1,g'`
@@ -90,7 +105,8 @@ if [[ "x$ADDITIONAL_PERFREPO_TAGS" != "x" ]];
 then
    export PERFREPO_TAGS="$PERFREPO_TAGS;$ADDITIONAL_PERFREPO_TAGS";
 fi
-export PERFCAKE_PROPS="-Dthread.count=$THREADS -Diteration.count=$ITERATIONS -Dworkitems.space.id=$WORK_ITEMS_SPACE -Dworkitemid.list=file:$WORK_ITEM_IDS -Dauth.token.list=file:$TOKEN_LIST -Dserver.host=$SERVER_HOST -Dserver.port=$SERVER_PORT -Dperfrepo.tags=$PERFREPO_TAGS -Dperfrepo.enabled=$PERFREPO_ENABLED"
+export REPORT_PERIOD=`expr $ITERATIONS / 100`
+export PERFCAKE_PROPS="-Dthread.count=$THREADS -Diteration.count=$ITERATIONS -Dworkitems.space.id=$WORK_ITEMS_SPACE -Dworkitemid.list=file:$WORK_ITEM_IDS -Dauth.token.list=file:$TOKEN_LIST -Dserver.host=$SERVER_HOST -Dserver.port=$SERVER_PORT -Dperfrepo.tags=$PERFREPO_TAGS -Dperfrepo.enabled=$PERFREPO_ENABLED -Dreport.period=$REPORT_PERIOD"
 
 # (C)RUD
 # Parse/extract the token for the test
