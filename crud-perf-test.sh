@@ -79,7 +79,7 @@ fi
 curl --silent -X GET -H "Accept: application/json" http://$SERVER_HOST:$SERVER_PORT/api/login/generate > /dev/null
 
 echo "Retrieving user ID..."
-export CORE_USER_ID=`curl --silent -X GET -H "Accept: application/json" http://$SERVER_HOST:$SERVER_PORT/api/users | sed -e 's,.*"id":"\([^"]*\)".*,\1,g'`
+export CORE_USER_ID=`curl --silent -X GET -H "Accept: application/json" "http://$SERVER_HOST:$SERVER_PORT/api/search/users?q=testuser" | sed -e 's,.*"id":"\([^"]*\)".*,\1,g'`
 if [[ "$CORE_USER_ID" =~ [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12} ]];
 then
 	echo "User ID is: $CORE_USER_ID";
