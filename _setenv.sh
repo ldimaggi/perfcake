@@ -34,6 +34,9 @@
 # This parameter allows to set additional tags separated by a semicolon ';'.
 #export ADDITIONAL_PERFREPO_TAGS="soak;12h"
 
+# 'true' if the results from each soak cycle should be reported to Zabbix [zabbix.devshift.net]
+#export ZABBIX_REPORT_ENABLED=false
+
 # This is the host name for the Zabbix report for which the results will be associated with.
 #export ZABBIX_HOST_PREFIX=PerfHost
 

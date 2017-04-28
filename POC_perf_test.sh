@@ -8,8 +8,9 @@ export USERS=300
 export SERVER_HOST=localhost
 export SERVER_PORT=1234
 export DURATION=43200
-export ADDITIONAL_PERFREPO_TAGS=soak;12h;centos-ci
-export ZABBIX_HOST_PREFIX=$NODE_NAME
+export ADDITIONAL_PERFREPO_TAGS="soak;12h;$NODE_NAME.ci.centos.org"
+export ZABBIX_HOST_PREFIX="$NODE_NAME.ci.centos.org"
+export ZABBIX_REPORT_ENABLED=true
 export PERFREPO_ENABLED=false
 
 # Setup required packages
@@ -22,6 +23,7 @@ yum -y install make
 yum -y install chkconfig
 yum -y install unzip
 yum -y install maven
+yum -y install zabbix-sender
 
 # Install Java - ref: https://tecadmin.net/install-java-8-on-centos-rhel-and-fedora/
 

@@ -35,18 +35,18 @@ then
 	sleep 10
 
 	# Run the docker core image (detached)
-	docker run -p $SERVER_PORT:8080 --name core -d -e ALMIGHTY_DEVELOPER_MODE_ENABLED=true -e ALMIGHTY_POSTGRES_HOST=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' db 2>/dev/null) almighty-core-deploy
+	docker run -p $SERVER_PORT:8080 --name core -d -e ALMIGHTY_LOG_LEVEL=warning -e ALMIGHTY_DEVELOPER_MODE_ENABLED=true -e ALMIGHTY_POSTGRES_HOST=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' db 2>/dev/null) almighty-core-deploy
 fi
 
 while true;
 do
    echo "Checking if the Core server is up and running ..."
-   curl -silent http://$SERVER_HOST:$SERVER_PORT/api/status
+   curl --silent http://$SERVER_HOST:$SERVER_PORT/api/status
    [[ $? -eq 0 ]] && break
    echo "The Core server is not responding, trying again after 10s."
    sleep 10
 done
-CORE_SERVER_STATUS=`curl -silent http://$SERVER_HOST:$SERVER_PORT/api/status | grep commit | sed -e 's,":",=,g' | sed -e 's,[{"}],,g' | sed -e 's,\,,;,g'`
+CORE_SERVER_STATUS=`curl --silent http://$SERVER_HOST:$SERVER_PORT/api/status | grep commit | sed -e 's,":",=,g' | sed -e 's,[{"}],,g' | sed -e 's,\,,;,g'`
 BASE_PERFREPO_TAGS="$ADDITIONAL_PERFREPO_TAGS;server=$SERVER_HOST:$SERVER_PORT;$CORE_SERVER_STATUS"
 export CORE_SERVER_COMMIT=`echo $CORE_SERVER_STATUS | sed -e 's,.*commit=\([^;]*\);.*,\1,g'`
 
