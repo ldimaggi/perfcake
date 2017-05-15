@@ -36,25 +36,33 @@ export ZABBIX_REPORT=$PERFORMANCE_RESULTS/zabbix-report.txt
 if [[ "x$CYCLE" < "x1" ]];
 #if false;
 then
-   rm -rf PerfCake.git
-   git clone -b v7.5 https://github.com/PerfCake/PerfCake PerfCake.git;
-   echo "Building PerfCake..."
-   mvn -f PerfCake.git/pom.xml clean install assembly:single -DskipTests 2>&1 > $PERFORMANCE_RESULTS/perfcake-build-maven.log
+   #rm -rf PerfCake.git
+   #git clone -b v7.5 https://github.com/PerfCake/PerfCake PerfCake.git;
+   #echo "Building PerfCake..."
+   #mvn -f PerfCake.git/pom.xml clean install assembly:single -DskipTests 2>&1 > $PERFORMANCE_RESULTS/perfcake-build-maven.log
+   wget https://www.perfcake.org/download/perfcake-$PERFCAKE_VERSION-bin.zip
 
-   rm -rf Plugins.git
-   git clone https://github.com/PerfCake/Plugins Plugins.git;
-   echo "Building PerfRepo Destination plugin..."
-   mvn -f Plugins.git/perfrepo-destination/pom.xml clean install -DskipTests 2>&1 > $PERFORMANCE_RESULTS/perfrepo-destination-build-maven.log
-   echo "Building HttpClientSender plugin..."
-   mvn -f Plugins.git/httpclient-sender/pom.xml clean install -DskipTests 2>&1 > $PERFORMANCE_RESULTS/httpclient-sender-build-maven.log
+   #rm -rf Plugins.git
+   #git clone https://github.com/PerfCake/Plugins Plugins.git;
+   #echo "Building PerfRepo Destination plugin..."
+   #mvn -f Plugins.git/perfrepo-destination/pom.xml clean install -DskipTests 2>&1 > $PERFORMANCE_RESULTS/perfrepo-destination-build-maven.log
+   #echo "Building HttpClientSender plugin..."
+   #mvn -f Plugins.git/httpclient-sender/pom.xml clean install -DskipTests 2>&1 > $PERFORMANCE_RESULTS/httpclient-sender-build-maven.log
+   wget https://github.com/PerfCake/Plugins/releases/download/v7.5/httpclient-sender-7.5.zip
+   unzip -q httpclient-sender-7.5.zip
+   wget https://github.com/PerfCake/Plugins/releases/download/v7.5/perfrepo-destination-7.5.zip
+   unzip -q perfrepo-destination-7.5.zip
 fi
 
 rm -rf $PERFCAKE_HOME;
-unzip -q PerfCake.git/perfcake/target/perfcake-$PERFCAKE_VERSION-bin.zip;
-cp -rf Plugins.git/perfrepo-destination/target/perfrepo-*.jar $PERFCAKE_HOME/lib/plugins/;
-cp -rf Plugins.git/perfrepo-destination/target/lib/*.jar $PERFCAKE_HOME/lib/plugins/;
-cp -rf Plugins.git/httpclient-sender/target/httpclient-*.jar $PERFCAKE_HOME/lib/plugins/;
-cp -rf Plugins.git/httpclient-sender/target/lib/*.jar $PERFCAKE_HOME/lib/plugins/;
+#unzip -q PerfCake.git/perfcake/target/perfcake-$PERFCAKE_VERSION-bin.zip;
+unzip -q perfcake-$PERFCAKE_VERSION-bin.zip;
+#cp -rf Plugins.git/perfrepo-destination/target/perfrepo-*.jar $PERFCAKE_HOME/lib/plugins/;
+#cp -rf Plugins.git/perfrepo-destination/target/lib/*.jar $PERFCAKE_HOME/lib/plugins/;
+#cp -rf Plugins.git/httpclient-sender/target/httpclient-*.jar $PERFCAKE_HOME/lib/plugins/;
+#cp -rf Plugins.git/httpclient-sender/target/lib/*.jar $PERFCAKE_HOME/lib/plugins/;
+cp -rf perfrepo-destination/*.jar $PERFCAKE_HOME/lib/plugins/;
+cp -rf httpclient-sender/*.jar $PERFCAKE_HOME/lib/plugins/;
 cp devtools-core-crud-create.xml $PERFCAKE_HOME/resources/scenarios/;
 cp devtools-core-crud-read.xml $PERFCAKE_HOME/resources/scenarios/;
 cp devtools-core-crud-update.xml $PERFCAKE_HOME/resources/scenarios/;
